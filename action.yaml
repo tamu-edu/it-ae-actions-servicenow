@@ -6,6 +6,11 @@ inputs:
     title: Action Version
     description: The version of the action to use
     required: true
+  github-token:
+    type: string
+    title: GitHub Token
+    description: The GitHub token to use for authentication
+    required: true
   sn-base-url:
     type: string
     title: Service Now Base URL
@@ -68,6 +73,7 @@ runs:
         repository: tamu-edu/it-ae-actions-servicenow
         path: action
         ref: ${{ inputs.action-version }}
+        token: ${{ inputs.github-token }}
 
     - name: Install python
       uses: actions/setup-python@v4
