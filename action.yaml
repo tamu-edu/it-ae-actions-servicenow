@@ -95,7 +95,7 @@ runs:
       run: |
         ARGS="--request_id ${{ inputs.sn-request-id }}"
         if [[ "${{ inputs.sn-action }}" == "add_comment" ]]; then
-          ARGS="${ARGS} add_comment --comment '${{ inputs.sn-input1 }}"
+          ARGS="${ARGS} add_comment --comment '${{ inputs.sn-input1 }}'"
         elif [[ "${{ inputs.sn-action }}" == "add_work_notes" ]]; then
           ARGS="${ARGS} add_work_notes --work_notes '${{ inputs.sn-input1 }}'"
         elif [[ "${{ inputs.sn-action }}" == "update_request_variable" ]]; then
