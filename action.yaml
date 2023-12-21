@@ -16,6 +16,7 @@ inputs:
     title: Service Now Password
     description: The password to use for authentication
     required: true
+  sn-request-id:
   sn-action:
     type: string
     title: Service Now Action
@@ -70,13 +71,13 @@ runs:
         SN_USERNAME: ${{ inputs.sn-username }}
         SN_PASSWORD: ${{ inputs.sn-password }}
       run: |
-        ARGS=""
+        ARGS="--request_id ${{ inputs.sn-request-id }}"
         if [[ "${{ inputs.sn-action }}" == "add_comment" ]]; then
-          ARGS="add_comment --comment '${{ inputs.sn-input1 }}"
+          ARGS="${ARGS} add_comment --comment '${{ inputs.sn-input1 }}"
         elif [[ "${{ inputs.sn-action }}" == "add_work_notes" ]]; then
-          ARGS="add_work_notes --work_notes '${{ inputs.sn-input1 }}'"
+          ARGS="${ARGS} add_work_notes --work_notes '${{ inputs.sn-input1 }}'"
         elif [[ "${{ inputs.sn-action }}" == "update_request_variable" ]]; then
-          ARGS="update_request_variable --variable_name ${{ inputs.sn-input1 }} --variable_value '${{ inputs.sn-input2 }}'"
+          ARGS="${ARGS} update_request_variable --variable_name ${{ inputs.sn-input1 }} --variable_value '${{ inputs.sn-input2 }}'"
         else
           echo "Invalid action: '${{ inputs.sn-action }}'"
           exit 1
