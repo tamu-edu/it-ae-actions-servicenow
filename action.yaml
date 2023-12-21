@@ -1,6 +1,11 @@
 name: Service Now Request Management
 description: Modifies Service Now Requests
 inputs:
+  action-version:
+    type: string
+    title: Action Version
+    description: The version of the action to use
+    required: true
   sn-base-url:
     type: string
     title: Service Now Base URL
@@ -57,12 +62,19 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Checkout actions repo
+      uses: actions/checkout@v4
+      with:
+        repository: tamu-edu/it-ae-actions-servicenow
+        path: action
+        ref: ${{ inputs.action-version }}
+
     - name: Install python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
     - name: Install python dependencies
-      run: pip install -r ./python/requirements.txt
+      run: pip install -r ./action/python/requirements.txt
 
     - name: run-service-now-action
       shell: bash
@@ -83,7 +95,7 @@ runs:
           exit 1
         fi
 
-        python ./python/run_service_now_action.py ${ARGS} 2>&1 | tee /tmp/output.txt
+        python ./action/python/run_service_now_action.py ${ARGS} 2>&1 | tee /tmp/output.txt
         echo "output<<EOF" >> $GITHUB_OUTPUT
         cat /tmp/output.txt >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
