@@ -27,6 +27,10 @@ inputs:
     description: The password to use for authentication
     required: true
   sn-request-id:
+    type: string
+    title: Service Now Request ID
+    description: The ID of the Service Now request to modify
+    required: true
   sn-action:
     type: string
     title: Service Now Action
@@ -100,6 +104,8 @@ runs:
           echo "Invalid action: '${{ inputs.sn-action }}'"
           exit 1
         fi
+
+        echo "ARGS: ${ARGS}"
 
         python ./action/python/service_now_updater.py ${ARGS} 2>&1 | tee /tmp/output.txt
         echo "output<<EOF" >> $GITHUB_OUTPUT
