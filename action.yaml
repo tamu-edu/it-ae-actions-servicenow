@@ -76,7 +76,7 @@ runs:
       with:
         repository: tamu-edu/it-ae-actions-servicenow
         path: action
-        # ref: ${{ inputs.action-version }}
+        ref: ${{ inputs.action-version }}
         token: ${{ inputs.github-token }}
 
     - name: Install python
