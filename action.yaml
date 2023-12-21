@@ -1,0 +1,80 @@
+name: Service Now Request Management
+description: Modifies Service Now Requests
+inputs:
+  sn-base-url:
+    type: string
+    title: Service Now Base URL
+    description: The base URL of the Service Now instance
+    required: true
+  sn-username:
+    type: string
+    title: Service Now Username
+    description: The username to use for authentication
+    required: true
+  sn-password:
+    type: string
+    title: Service Now Password
+    description: The password to use for authentication
+    required: true
+  sn-action:
+    type: string
+    title: Service Now Action
+    description: The action to perform on the Service Now request
+    required: true
+    enum:
+      - add_comment
+      - add_work_notes
+      - close_request
+      - update_request_variable
+  sn-parameters:
+    type: object
+    title: Service Now Parameters
+    description: |
+      The parameters to use for the Service Now action. The parameters are
+      different for each action. Use the following as a guide -
+      * add_comment - `{"comment": "comment to add"}`
+      * add_work_notes - `{"work_notes": "work notes to add"}`
+      * close_request - `{}`
+      * update_request_variable - `{"variable_name": "variable value"}`
+
+outputs:
+  output:
+    type: string
+    title: Output
+    description: Output from the Service Now action script
+    value: ${{ steps.run-service-now-action.outputs.output }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install python dependencies
+      run: pip install -r ./python/requirements.txt
+
+    - name: run-service-now-action
+      shell: bash
+      env:
+        SN_BASE_URL: ${{ inputs.sn-base-url }}
+        SN_USERNAME: ${{ inputs.sn-username }}
+        SN_PASSWORD: ${{ inputs.sn-password }}
+      run: |
+        ARGS=""
+        if [[ "${{ inputs.sn-action }}" == "add_comment" ]]; then
+          ARGS="add_comment --comment '${{ inputs.sn-parameters.comment }}"
+        elif [[ "${{ inputs.sn-action }}" == "add_work_notes" ]]; then
+          ARGS="add_work_notes --work_notes '${{ inputs.sn-parameters.work_notes }}'"
+        elif [[ "${{ inputs.sn-action }}" == "update_request_variable" ]]; then
+          ARGS="update_request_variable --variable_name ${{ inputs.sn-parameters.variable_name }} --variable_value '${{ inputs.sn-parameters.variable_value }}'"
+        else
+          echo "Invalid action: '${{ inputs.sn-action }}'"
+          exit 1
+        fi
+
+        python ./python/run_service_now_action.py ${ARGS} 2>&1 | tee /tmp/output.txt
+        echo "output<<EOF" >> $GITHUB_OUTPUT
+        cat /tmp/output.txt >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
