@@ -26,16 +26,25 @@ inputs:
       - add_work_notes
       - close_request
       - update_request_variable
-  sn-parameters:
-    type: object
-    title: Service Now Parameters
-    description: |
-      The parameters to use for the Service Now action. The parameters are
-      different for each action. Use the following as a guide -
-      * add_comment - `{"comment": "comment to add"}`
-      * add_work_notes - `{"work_notes": "work notes to add"}`
-      * close_request - `{}`
-      * update_request_variable - `{"variable_name": "variable value"}`
+
+  # Usage:
+  # The inputs to use for the Service Now action. The inputs are
+  # different for each action. Use the following as a guide -
+  # * add_comment - `my comment`
+  # * add_work_notes - `my work note`
+  # * close_request - ``
+  # * update_request_variable - `my_variable` and `my value`
+
+  sn-input1:
+    type: string
+    title: Service Now Input 1
+    description: The first input to the Service Now action
+    required: true
+  sn-input2:
+    type: string
+    title: Service Now Input 2
+    description: The second input to the Service Now action (optional)
+    required: false
 
 outputs:
   output:
@@ -63,11 +72,11 @@ runs:
       run: |
         ARGS=""
         if [[ "${{ inputs.sn-action }}" == "add_comment" ]]; then
-          ARGS="add_comment --comment '${{ inputs.sn-parameters.comment }}"
+          ARGS="add_comment --comment '${{ inputs.sn-input1 }}"
         elif [[ "${{ inputs.sn-action }}" == "add_work_notes" ]]; then
-          ARGS="add_work_notes --work_notes '${{ inputs.sn-parameters.work_notes }}'"
+          ARGS="add_work_notes --work_notes '${{ inputs.sn-input1 }}'"
         elif [[ "${{ inputs.sn-action }}" == "update_request_variable" ]]; then
-          ARGS="update_request_variable --variable_name ${{ inputs.sn-parameters.variable_name }} --variable_value '${{ inputs.sn-parameters.variable_value }}'"
+          ARGS="update_request_variable --variable_name ${{ inputs.sn-input1 }} --variable_value '${{ inputs.sn-input2 }}'"
         else
           echo "Invalid action: '${{ inputs.sn-action }}'"
           exit 1
