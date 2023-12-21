@@ -101,7 +101,7 @@ runs:
           exit 1
         fi
 
-        python ./action/python/run_service_now_action.py ${ARGS} 2>&1 | tee /tmp/output.txt
+        python ./action/python/service_now_updater.py ${ARGS} 2>&1 | tee /tmp/output.txt
         echo "output<<EOF" >> $GITHUB_OUTPUT
         cat /tmp/output.txt >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
