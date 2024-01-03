@@ -63,8 +63,6 @@ inputs:
 
 outputs:
   output:
-    type: string
-    title: Output
     description: Output from the Service Now action script
     value: ${{ steps.run-service-now-action.outputs.output }}
 
@@ -84,6 +82,7 @@ runs:
       with:
         python-version: '3.10'
     - name: Install python dependencies
+      shell: bash
       run: pip install -r ./action/python/requirements.txt
 
     - name: run-service-now-action
