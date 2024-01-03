@@ -99,6 +99,8 @@ runs:
           ARGS="${ARGS} add_work_notes --work_notes \"${{ inputs.sn-input1 }}\""
         elif [[ "${{ inputs.sn-action }}" == "update_request_variable" ]]; then
           ARGS="${ARGS} update_request_variable --variable_name ${{ inputs.sn-input1 }} --variable_value \"${{ inputs.sn-input2 }}\""
+        elif [[ "${{ inputs.sn-action }}" == "close_request" ]]; then
+          ARGS="${ARGS} close_request"
         else
           echo "Invalid action: '${{ inputs.sn-action }}'"
           exit 1
